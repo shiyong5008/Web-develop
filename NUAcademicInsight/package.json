@@ -1,0 +1,18 @@
+{
+  "name": "nuacademicinsight",
+  "version": "1.0.0",
+  "description": "---------------------------------- # Iter1 Team started and ongoing to coding on the frontend pages, and also moving on to work at the links between frontend and backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.ccs.neu.edu/NEU-CS5610-SU21/NUAcademicInsight.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

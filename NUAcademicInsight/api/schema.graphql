@@ -1,0 +1,184 @@
+scalar GraphQLDate
+
+type Profile {
+  _id: ID!
+  id: String!
+  firstname: String!
+  lastname: String!
+  email: String!
+  password: String!
+}
+
+type Review {
+  _id: ID!
+  id: Int!
+  title: String
+  reviewer: String
+  courseName: String
+  createdDate: GraphQLDate
+  courseDate: GraphQLDate
+  answer1: String
+  answer2: String
+  answer3: String
+  answer4: String
+  additional: String
+}
+
+type Blog {
+  _id: ID!
+  id: Int!
+  title: String!
+  creator: String
+  createdDate: GraphQLDate!
+  content: String
+}
+
+type ReviewListWithPages {
+  reviews: [Review!]!
+  pages: Int
+}
+
+type BlogListWithPages {
+  blogs: [Blog!]!
+  pages: Int
+}
+
+enum StatusType {
+  New
+  Assigned
+  Fixed
+  Closed
+}
+
+type Issue {
+  _id: ID!
+  id: Int!
+  title: String!
+  status: StatusType!
+  owner: String
+  effort: Int
+  created: GraphQLDate!
+  due: GraphQLDate
+  description: String
+}
+
+type IssueCounts {
+  owner: String!
+  New: Int
+  Assigned: Int
+  Fixed: Int
+  Closed: Int
+}
+
+type IssueListWithPages {
+  issues: [Issue!]!
+  pages: Int
+}
+
+type User {
+  signedIn: Boolean!
+  givenName: String
+  name: String
+  email: String
+}
+
+"Toned down Issue, used as inputs, without server generated values."
+input ReviewInputs {
+  title: String!
+  reviewer: String
+  courseName: String
+  createdDate: GraphQLDate
+  courseDate: GraphQLDate
+  answer1: String
+  answer2: String
+  answer3: String
+  answer4: String
+  additional: String 
+}
+
+input IssueInputs {
+  title: String!
+  "Optional, if not supplied, will be set to 'New'"
+  status: StatusType = New
+  owner: String
+  effort: Int
+  due: GraphQLDate
+  description: String
+}
+
+input ProfileInputs {
+  firstname: String!
+  lastname: String!
+  email: String!
+  password: String!
+}
+
+input BlogInputs {
+  title: String!
+  creator: String
+  createdDate: GraphQLDate!
+  content: String!
+}
+
+"""Inputs for issueUpdate: all are optional. Whichever is specified will
+be set to the given value, undefined fields will remain unmodified."""
+input IssueUpdateInputs {
+  title: String
+  status: StatusType
+  owner: String
+  effort: Int
+  due: GraphQLDate
+  description: String
+}
+
+input ReviewUpdateInputs {
+  title: String
+  reviewer: String
+  courseName: String
+  courseDate: GraphQLDate
+  answer1: String
+  answer2: String
+  answer3: String
+  answer4: String
+  additional: String 
+}
+
+##### Top level declarations
+type Query {
+  about: String!
+  user: User!
+  issueList(
+    status: StatusType
+    effortMin: Int
+    effortMax: Int
+    search: String
+    page: Int = 1
+  ): IssueListWithPages
+  reviewList(
+    search: String
+    page: Int = 1
+  ): ReviewListWithPages
+  issue(id: Int!): Issue!
+  review(id: Int!): Review!
+  blogList: [Blog!]!
+  blog(id: Int!): Blog!
+  issueCounts(
+    status: StatusType
+    effortMin: Int
+    effortMax: Int
+  ): [IssueCounts!]!
+  profile(id: String!): Profile!
+}
+
+type Mutation {
+  setAboutMessage(message: String!): String
+  issueAdd(issue: IssueInputs!): Issue!
+  reviewAdd(review: ReviewInputs!): Review!
+  issueUpdate(id: Int!, changes: IssueUpdateInputs!): Issue!
+  reviewUpdate(id: Int!, changes: ReviewUpdateInputs!): Review!
+  issueDelete(id: Int!): Boolean!
+  reviewDelete(id: Int!): Boolean!
+  issueRestore(id: Int!): Boolean!
+  profileAdd(profile: ProfileInputs!): Profile!
+  blogAdd(blog: BlogInputs!): Blog!
+}
